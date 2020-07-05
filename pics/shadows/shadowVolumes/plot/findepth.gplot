@@ -1,0 +1,17 @@
+
+reset
+set terminal postscript eps enhanced "Times-Roman" 25
+
+set xlabel "depth"                                                       
+
+set xrange [ 0 : 1000 ] noreverse nowriteback                                
+set yrange [ -1 : 1.1 ] noreverse nowriteback     
+        
+set output "findepth.eps"
+
+set key bottom right
+
+plot \
+    (1001-2000/x)/999 title "n=1,f=1000" with lines lt 1 lw 4 lc rgb "red", \
+    (1010-20000/x)/990 title "n=10,f=1000" with lines lt 1 lw 4 lc rgb "green",\
+    (1100-200000/x)/900 title "n=100,f=1000" with lines lt 1 lw 4 lc rgb "blue"

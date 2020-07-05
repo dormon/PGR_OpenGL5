@@ -1,0 +1,10 @@
+\frametitle{Přidáme šum}
+    \includegraphics[width=.6\textwidth]{pics/procedural/drevo.eps}
+
+  \begin{minted}[frame=lines]{glsl}
+vec2 noisy_pos = model_pos.xy
+    + 0.1*fnoise(model_pos.xy);
+
+float t = smoothstep(0.2, 0.4, mod(length(noisy_pos)*10, 1));
+vec3 color = (1-t)*brown + t*yellow;
+  \end{minted}

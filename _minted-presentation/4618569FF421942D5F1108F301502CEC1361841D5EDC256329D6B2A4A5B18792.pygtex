@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{          \PYGZsh{}version 330}
+          \PYG{k}{layout}\PYG{p}{(}\PYG{c+cp}{triangles}\PYG{p}{)}\PYG{k+kt}{in}\PYG{p}{;}
+          \PYG{k}{layout}\PYG{p}{(}\PYG{c+cp}{triangle\PYGZus{}strip}\PYG{p}{,}\PYG{c+cp}{max\PYGZus{}vertices}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{)}\PYG{k+kt}{out}\PYG{p}{;}
+          \PYG{k+kt}{uniform} \PYG{k+kt}{mat4} \PYG{n}{MVP}\PYG{p}{,}\PYG{n}{M}\PYG{p}{;}\PYG{c+c1}{//matice}
+          \PYG{k+kt}{uniform} \PYG{k+kt}{vec4} \PYG{n}{LightPosition}\PYG{p}{;}\PYG{c+c1}{//pozice svetla}
+          \PYG{k+kt}{void} \PYG{n}{main}\PYG{p}{()\PYGZob{}}
+            \PYG{k+kt}{vec4} \PYG{n}{LP}\PYG{o}{=}\PYG{n}{M}\PYG{o}{*}\PYG{n}{LightPosition}\PYG{p}{;}
+            \PYG{k+kt}{vec4} \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{p}{];}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{]}\PYG{o}{=}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{;}\PYG{c+c1}{//body trojuhelniku}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{=}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{;}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{=}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{;}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{o}{=}\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{.}\PYG{n}{xyz}\PYG{o}{*}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{w}\PYG{o}{\PYGZhy{}}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{xyz}\PYG{p}{,}\PYG{l+m+mo}{0}\PYG{p}{);}\PYG{c+c1}{//v nekonecnu}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{o}{=}\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{.}\PYG{n}{xyz}\PYG{o}{*}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{w}\PYG{o}{\PYGZhy{}}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{xyz}\PYG{p}{,}\PYG{l+m+mo}{0}\PYG{p}{);}
+            \PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{o}{=}\PYG{k+kt}{vec4}\PYG{p}{(}\PYG{n+nb}{gl\PYGZus{}in}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{].}\PYG{n+nb}{gl\PYGZus{}Position}\PYG{p}{.}\PYG{n}{xyz}\PYG{o}{*}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{w}\PYG{o}{\PYGZhy{}}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{xyz}\PYG{p}{,}\PYG{l+m+mo}{0}\PYG{p}{);}
+            \PYG{k+kt}{vec3} \PYG{n}{N}\PYG{o}{=}\PYG{n+nf}{normalize}\PYG{p}{(}\PYG{n+nf}{cross}\PYG{p}{((}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{]).}\PYG{n}{xyz}\PYG{p}{,(}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{]).}\PYG{n}{xyz}\PYG{p}{));}
+            \PYG{k+kt}{float} \PYG{n}{Distance}\PYG{o}{=}\PYG{n+nf}{dot}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,}\PYG{n}{LP}\PYG{p}{.}\PYG{n}{xyz}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{n+nf}{dot}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{].}\PYG{n}{xyz}\PYG{p}{);}
+            \PYG{k}{if}\PYG{p}{(}\PYG{n}{Distance}\PYG{o}{\PYGZlt{}=}\PYG{l+m+mo}{0}\PYG{p}{)\PYGZob{}}\PYG{c+c1}{//otocime volume vnitrkem ven}
+              \PYG{k+kt}{vec4} \PYG{n}{c}\PYG{o}{=}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{];}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{]}\PYG{o}{=}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{];}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{=}\PYG{n}{c}\PYG{p}{;}
+              \PYG{n}{c}\PYG{o}{=}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{];}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{o}{=}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{];}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{o}{=}\PYG{n}{c}\PYG{p}{;}
+            \PYG{p}{\PYGZcb{}}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mo}{0}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nb}{gl\PYGZus{}Position}\PYG{o}{=}\PYG{n}{MVP}\PYG{o}{*}\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{];}\PYG{n+nf}{EmitVertex}\PYG{p}{();}
+            \PYG{n+nf}{EndPrimitive}\PYG{p}{();}
+          \PYG{p}{\PYGZcb{}}
+\end{Verbatim}

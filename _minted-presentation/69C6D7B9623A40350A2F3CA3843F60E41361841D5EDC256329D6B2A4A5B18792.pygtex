@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{float} \PYG{n}{depth} \PYG{o}{=} \PYG{n+nf}{texture}\PYG{p}{(}\PYG{n}{shadowTexture}\PYG{p}{,} \PYG{n}{shadow\PYGZus{}pos}\PYG{p}{.}\PYG{n}{xy}\PYG{p}{).}\PYG{n}{x}\PYG{p}{;}
+\PYG{k+kt}{float} \PYG{n}{bias} \PYG{o}{=} \PYG{n+nf}{max}\PYG{p}{(}\PYG{l+m+mf}{0.05} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{\PYGZhy{}} \PYG{n+nf}{dot}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{L}\PYG{p}{)),} \PYG{l+m+mf}{0.005}\PYG{p}{);}
+\PYG{k+kt}{float} \PYG{n}{shadow} \PYG{o}{=} \PYG{n}{shadow\PYGZus{}pos}\PYG{p}{.}\PYG{n}{z} \PYG{o}{\PYGZhy{}} \PYG{n}{bias} \PYG{o}{\PYGZgt{}} \PYG{n}{depth} \PYG{o}{?} \PYG{l+m+mf}{1.0} \PYG{o}{:} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+\end{Verbatim}

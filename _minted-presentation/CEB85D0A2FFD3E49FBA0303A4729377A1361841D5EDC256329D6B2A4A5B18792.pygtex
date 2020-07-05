@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{vec3} \PYG{n}{brown} \PYG{o}{=} \PYG{k+kt}{vec3}\PYG{p}{(}\PYG{l+m+mi}{140}\PYG{p}{,} \PYG{l+m+mi}{90}\PYG{p}{,} \PYG{l+m+mi}{27}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{255}\PYG{p}{;}
+\PYG{k+kt}{vec3} \PYG{n}{yellow} \PYG{o}{=} \PYG{k+kt}{vec3}\PYG{p}{(}\PYG{l+m+mi}{188}\PYG{p}{,} \PYG{l+m+mi}{140}\PYG{p}{,} \PYG{l+m+mi}{42}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{255}\PYG{p}{;}
+
+\PYG{k+kt}{float} \PYG{n}{t} \PYG{o}{=} \PYG{n+nf}{smoothstep}\PYG{p}{(}\PYG{l+m+mf}{0.2}\PYG{p}{,} \PYG{l+m+mf}{0.4}\PYG{p}{,} \PYG{n+nf}{mod}\PYG{p}{(}\PYG{n+nf}{length}\PYG{p}{(}\PYG{n}{model\PYGZus{}pos}\PYG{p}{.}\PYG{n}{xy}\PYG{p}{)}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{));}
+\PYG{k+kt}{vec3} \PYG{n}{color} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{n}{t}\PYG{p}{)}\PYG{o}{*}\PYG{n}{brown} \PYG{o}{+} \PYG{n}{t}\PYG{o}{*}\PYG{n}{yellow}\PYG{p}{;}
+\end{Verbatim}

@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{float} \PYG{n}{shadow} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+\PYG{k+kt}{vec2} \PYG{n}{texelSize} \PYG{o}{=} \PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n+nf}{textureSize}\PYG{p}{(}\PYG{n}{shadowTexture}\PYG{p}{,} \PYG{l+m+mo}{0}\PYG{p}{);}
+\PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{x} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{x} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{++}\PYG{n}{x}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{y} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{y} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{++}\PYG{n}{y}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{float} \PYG{n}{depth} \PYG{o}{=} \PYG{n+nf}{texture}\PYG{p}{(}\PYG{n}{shadowTexture}\PYG{p}{,}
+          \PYG{n}{shadow\PYGZus{}pos}\PYG{p}{.}\PYG{n}{xy} \PYG{o}{+} \PYG{k+kt}{vec2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{*} \PYG{n}{texelSize}\PYG{p}{).}\PYG{n}{r}\PYG{p}{;}
+        \PYG{n}{shadow} \PYG{o}{+=} \PYG{n}{shadow\PYGZus{}pos}\PYG{p}{.}\PYG{n}{z} \PYG{o}{\PYGZhy{}} \PYG{n}{bias} \PYG{o}{\PYGZgt{}} \PYG{n}{depth} \PYG{o}{?} \PYG{l+m+mf}{1.0} \PYG{o}{:} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{n}{shadow} \PYG{o}{/=} \PYG{l+m+mf}{9.0}\PYG{p}{;}
+\end{Verbatim}

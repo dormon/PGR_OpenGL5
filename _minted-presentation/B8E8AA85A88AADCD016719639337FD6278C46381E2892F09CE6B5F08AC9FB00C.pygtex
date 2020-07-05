@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{n}{SDL\PYGZus{}GL\PYGZus{}StencilSize}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{);}
+    \PYG{n+nf}{glClear}\PYG{p}{(}\PYG{l+s}{GL\PYGZus{}STENCIL\PYGZus{}BUFFER\PYGZus{}BIT}\PYG{p}{);}
+    \PYG{n+nf}{glClearStencil}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{);}
+    \PYG{n+nf}{glStencilMaskSeparate}\PYG{p}{(}\PYG{l+s}{GL\PYGZus{}FRONT\PYGZus{}AND\PYGZus{}BACK}\PYG{p}{,}\PYG{o}{\PYGZti{}}\PYG{l+m+mi}{0}\PYG{p}{);} \PYG{c+c1}{//!!!}
+\end{Verbatim}
