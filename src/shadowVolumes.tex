@@ -16,7 +16,7 @@
   \end{itemize}
   \vfill
 
-  \begin{minted}[frame=lines]{c++}
+  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
     SDL_GL_StencilSize(8);
     glClear(GL_STENCIL_BUFFER_BIT);
     glClearStencil(0);
@@ -31,7 +31,7 @@
 
   \vfill
 
-  \begin{minted}[frame=lines]{c++}
+  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
     glEnable(GL_STENCIL_TEST);
 
     glStencilFuncSeparate(face, func, ref, mask);
@@ -180,7 +180,7 @@
 \begin{frame}[fragile]
   \frametitle{Shadow Volumes - 1. průchod}
 
-  \begin{minted}[frame=lines]{c++}
+  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate phong program
 glUseProgram(phongProgram);
 
@@ -202,7 +202,7 @@ glMultiDrawElementsIndirect(...);
 \begin{frame}[fragile]
   \frametitle{Shadow Volumes - 2. průchod}
 
-  \begin{minted}[frame=lines]{c++}
+  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate shadow volume geometry program
 glUseProgram(shadowVolumeProgram);
 
@@ -223,21 +223,23 @@ glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shadow Volumes - 3. průchod}
+\begin{frame}[fragile]\frametitle{Shadow Volumes - 3. pass - diffuse/specular}
+  \scriptsize
 
-  \begin{minted}[frame=lines]{c++}
+  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate phong program
-glUseProgram(shadowVolumeProgram);
+glUseProgram(phongProgram);
 
-glProgramUniform4f (phongProgram,
-  lightAmbientColorUniform,0,0,0,0);
-glProgramUniform4f (phongProgram,
-  lightDiffuseColorUniform,light.diffuseColor);
-glProgramUniform4f (phongProgram,
-  lightSpecularColorUniform,light.specularColor);
+glProgramUniform4f(phongProgram,lightAmbientColorUniform,0,0,0,0);
+glProgramUniform4f(phongProgram,lightDiffuseColorUniform,light.diffuseColor);
+glProgramUniform4f(phongProgram,lightSpecularColorUniform,light.specularColor);
 
+//stencil tess will pass only when the value inside stencil buffer is 0
 glStencilFunc(GL_EQUAL,0,0xff);
+
+//we need to add the diffuse and specular illumination
+glEnable(GL_BLEND);
+glBlendFunc(GL_ONE,GL_ONE);
 
 //draw the scene
 glMultiDrawElementsIndirect(...);

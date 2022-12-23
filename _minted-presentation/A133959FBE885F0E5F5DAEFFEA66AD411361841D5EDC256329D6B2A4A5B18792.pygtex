@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k+kt}{float} \PYG{n}{fnoise}\PYG{p}{(}\PYG{k+kt}{vec2} \PYG{n}{p}\PYG{p}{)}
-\PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{return} \PYG{n}{noise}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
-        \PYG{o}{+} \PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{noise}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{)}
-        \PYG{o}{+} \PYG{l+m+mf}{0.25}\PYG{o}{*}\PYG{n}{noise}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{o}{*}\PYG{n}{p}\PYG{p}{);}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

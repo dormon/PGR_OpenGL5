@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k+kt}{float} \PYG{n}{d} \PYG{o}{=} \PYG{n+nf}{length}\PYG{p}{(}\PYG{n}{model\PYGZus{}pos}\PYG{p}{.}\PYG{n}{xy}\PYG{p}{);}
-\PYG{k+kt}{float} \PYG{n}{t} \PYG{o}{=} \PYG{n+nf}{mod}\PYG{p}{(}\PYG{n}{d}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
-\end{Verbatim}

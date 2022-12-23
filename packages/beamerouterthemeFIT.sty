@@ -6,10 +6,10 @@
 
 \mode<presentation>
 
-\pgfdeclareimage[width=6cm,interpolate=true]{fitlogotext}{img/fitlogo1}
+\pgfdeclareimage[width=6cm,interpolate=true]{fitlogotext}{packages/fitImages/fitlogo1}
 
 \ifbeamer@mylogo
-  \pgfdeclareimage[width=1.7cm,interpolate=true]{fitlogotext}{img/mylogo}
+  \pgfdeclareimage[width=1.7cm,interpolate=true]{fitlogotext}{packages/fitImages/mylogo}
 \fi
 
 \ifbeamer@nologo
@@ -85,7 +85,7 @@
           \end{minipage}}%
       \beamer@tempdim=\ht\beamer@tempbox%
       \advance\beamer@tempdim by 2pt%
-      \pgfdeclareimage[height=1.4ex,interpolate=true]{fitlogowhite}{img/fitlogo3}%
+      \pgfdeclareimage[height=1.4ex,interpolate=true]{fitlogowhite}{packages/fitImages/fitlogo3}%
 %POZADI - obdelnik pod textem
       \begin{pgfpicture}{0pt}{0pt}{\paperwidth}{\beamer@tempdim}
         \usebeamercolor{frametitle right}

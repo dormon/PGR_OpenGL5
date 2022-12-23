@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-    \PYG{n+nf}{glEnable}\PYG{p}{(}\PYG{l+s}{GL\PYGZus{}STENCIL\PYGZus{}TEST}\PYG{p}{);}
-
-    \PYG{n+nf}{glStencilFuncSeparate}\PYG{p}{(}\PYG{n}{face}\PYG{p}{,} \PYG{n}{func}\PYG{p}{,} \PYG{n}{ref}\PYG{p}{,} \PYG{n}{mask}\PYG{p}{);}
-\end{Verbatim}
