@@ -7,61 +7,59 @@
 \end{frame}
 \setbeamercolor{background canvas}{bg=white}
 
-\begin{frame}
-  \frametitle{Shadow-Mapping - přehled}
+\begin{frame}\frametitle{Shadow Mapping}\scriptsize
+  \begin{itemize}
+    \item Two render passes.
+    \item Two types of samples -- (view-samples, shadow-samples)
+    \item Every view-sample has corresponding shadow-sample.
+  \end{itemize}
   \begin{itemize}
     \item Dva průchody
-    \item Dva druhy vzorků \\ (view-samples, shadow-samples)
-    \item Každý view-sample má přiřazený \\ shadow-sample
+    \item Dva druhy vzorků -- (view-samples, shadow-samples)
+    \item Každý view-sample má přiřazený -- shadow-sample
   \end{itemize}
   \begin{picture}(320,250)
-    \put(135,120){\includegraphics[height=7.5cm,keepaspectratio]{pics/shadows/shadowMapping/shadowmapping}}
+    \put(235,120){\includegraphics[height=5cm,keepaspectratio]{pics/shadows/shadowMapping/shadowmapping}}
     \put(-20,100 ){\includegraphics[height=5cm,keepaspectratio]{pics/shadows/shadowMapping/sponza2_sm}}
   \end{picture}
 \end{frame}
 
 
 
-\begin{frame}
-    \frametitle{Stínové mapy}
-
-%    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/vsm.eps}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/pcf_nearest.eps}
+\begin{frame}\frametitle{Shadow map texture / Stínové mapy}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/pcf_nearest.eps}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Princip}
-    \includegraphics[height=.75\textheight]{pics/shadows/shadowMapping/smap.eps}
-    \begin{itemize}
-        \item Připravíme si z-buffer kamery ve světle.
-        \item Porovnáváme hloubky vykreslovaných fragmentù.
-    \end{itemize}
+\begin{frame}\frametitle{Algorithm / Princip}\scriptsize
+  \includegraphics[height=.5\textheight]{pics/shadows/shadowMapping/smap.eps}
+  \begin{itemize}
+    \item We need to prepare z-buffer (shadow map) from the light source point of view.
+    \item We need to compare the distance from view-sample to the light source with the depth stored in shadow map.
+  \end{itemize}
+  \begin{itemize}
+    \item Připravíme si z-buffer kamery ve světle.
+    \item Porovnáváme hloubky vykreslovaných fragmentù.
+  \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Hloubková mapa}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/depth.eps}
+\begin{frame}\frametitle{Shadow map / Hloubková mapa}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/depth.eps}
 \end{frame}
 
 
-\begin{frame}
-    \frametitle{Matika stínových těles}
+\begin{frame}\frametitle{Mathematics of shadow mapping / Matika stínových map}
+  \includegraphics[width=4in]{pics/shadows/shadowMapping/smspc.eps}
+  
+  \vfill
 
-    \includegraphics[width=4in]{pics/shadows/shadowMapping/smspc.eps}
-    
-    \vfill
-
-    $\displaystyle T = \left( \begin{array}{cccc}
-        0.5 & 0   & 0   & 0.5 \\
-        0   & 0.5 & 0   & 0.5 \\
-        0   & 0   & 0.5 & 0.5 \\
-        0   & 0   & 0   & 1 \end{array} \right) \cdot P_l \cdot V_l \cdot M$
+  $\displaystyle T = \left( \begin{array}{cccc}
+      0.5 & 0   & 0   & 0.5 \\
+      0   & 0.5 & 0   & 0.5 \\
+      0   & 0   & 0.5 & 0.5 \\
+      0   & 0   & 0   & 1 \end{array} \right) \cdot P_l \cdot V_l \cdot M$
 \end{frame}
 
-\begin{frame}[fragile]
-    \frametitle{GLSL}
-
-{\small
+\begin{frame}[fragile]\frametitle{GLSL}\scriptsize
 \begin{minted}[bgcolor=bg]{packages/graphics.py:GLShaderLexer -x}
 //Vertex shader
 in vec4 position;
@@ -82,37 +80,36 @@ void main() {
     else
         gl_FragColor = unshadowed_color;
 }
-  \end{minted}
-}
+\end{minted}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Shadow Acne}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/acne.eps}
+\begin{frame}\frametitle{Shadow Acne}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/acne.eps}
 \end{frame}
 
-\begin{frame}[fragile]
-    \frametitle{Bias}
-    \includegraphics[width=.5\textwidth]{pics/shadows/shadowMapping/acne_before.eps}
-    \includegraphics[width=.5\textwidth]{pics/shadows/shadowMapping/acne_after.eps}
-    \vfill
+\begin{frame}[fragile]\frametitle{Bias}\scriptsize
+  \includegraphics[width=.5\textwidth]{pics/shadows/shadowMapping/acne_before.eps}
+  \includegraphics[width=.5\textwidth]{pics/shadows/shadowMapping/acne_after.eps}
+  \vfill
 
-{\small
-  \begin{minted}[frame=lines]{glsl}
+\begin{minted}[bgcolor=bg]{packages/graphics.py:GLShaderLexer -x}
 float depth = texture(shadowTexture, shadow_pos.xy).x;
 float bias = max(0.05 * (1.0 - dot(N, L)), 0.005);
 float shadow = shadow_pos.z - bias > depth ? 1.0 : 0.0; 
-  \end{minted}
-}
+\end{minted}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Alias}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/shadow_alias.eps}
+\begin{frame}\frametitle{Alias}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/shadow_alias.eps}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Shadow-Mapping - Problems}
+\begin{frame}\frametitle{Shadow-Mapping - Problems}
+  \begin{itemize}
+    \item Many shadow-samples are over utilized.
+    \item Many shadow-samples are under utilized.
+    \item $\to$ Jagged edges.
+    \item There is a lot of method for mitigation of visual artifacts based on space partitioning or warping.
+  \end{itemize}
   \begin{itemize}
     \item Mnoho shadow-samples je nadužíváno.
     \item Mnoho shadow-samples není vůbec využito.
@@ -125,20 +122,17 @@ float shadow = shadow_pos.z - bias > depth ? 1.0 : 0.0;
   \end{picture}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Zubaté hrany}
+\begin{frame}\frametitle{Jagged edges / Zubaté hrany}
   \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/projectedShadowSamples}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Měkké stíny}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/pcf_nearest.eps}
+\begin{frame}\frametitle{Soft shadows / Měkké stíny}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowMapping/pcf_nearest.eps}
 \end{frame}
 
-\begin{frame}[fragile]
-\frametitle{PCF}
+\begin{frame}[fragile]\frametitle{PCF}
 {\small
-  \begin{minted}[frame=lines]{glsl}
+\begin{minted}[bgcolor=bg]{packages/graphics.py:GLShaderLexer -x}
 float shadow = 0.0;
 vec2 texelSize = 1.0 / textureSize(shadowTexture, 0);
 for(int x = -1; x <= 1; ++x)
@@ -156,20 +150,19 @@ shadow /= 9.0;
 }
 \end{frame}
 
-\begin{frame}
-    \frametitle{Souhrn}
-    $+$
-    \begin{itemize}
-        \item Rychlé
-        \item Jednoduché
-        \item Žádná nová geometrie
-        \item Umí měkké stíny
-    \end{itemize}
-    \vfill
-    $-$
-    \begin{itemize}
-        \item Všesměrová světla
-        \item Omezené rozlišení textur
-        \item Alias
-    \end{itemize}
+\begin{frame}\frametitle{Properties / Souhrn}
+  $+$
+  \begin{itemize}
+    \item Fast / Rychlé
+    \item Simple / Jednoduché
+    \item No new geometry / Žádná nová geometrie
+    \item Supports "soft" shadows / Umí měkké stíny
+  \end{itemize}
+  \vfill
+  $-$
+  \begin{itemize}
+    \item Omnidirectional light sources / Všesměrová světla
+    \item Shadow map resolution / Omezené rozlišení textur
+    \item Alias
+  \end{itemize}
 \end{frame}

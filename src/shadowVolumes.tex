@@ -7,35 +7,36 @@
 \end{frame}
 \setbeamercolor{background canvas}{bg=white}
 
-\begin{frame}[fragile]
-  \frametitle{Stencil buffer}
+\begin{frame}[fragile]\frametitle{Stencil buffer}\scriptsize
+\begin{itemize}
+  \item Stencil buffer is a part of framebuffer.
+  \item Intergers, 8bits
+\end{itemize}
 
-  \begin{itemize}
-    \item Další část framebuferu
-    \item Celočíselný, obvykle 8bpp
-  \end{itemize}
-  \vfill
+\begin{itemize}
+  \item Další část framebuferu
+  \item Celočíselný, obvykle 8bpp
+\end{itemize}
+\vfill
 
-  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
-    SDL_GL_StencilSize(8);
-    glClear(GL_STENCIL_BUFFER_BIT);
-    glClearStencil(0);
-    glStencilMaskSeparate(GL_FRONT_AND_BACK,~0); //!!!
-  \end{minted}
+\begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
+SDL_GL_StencilSize(8);//stencil buffer of default framebuffer
+glClear(GL_STENCIL_BUFFER_BIT);//clearing of stencil buffer
+glClearStencil(0);//cleraing value
+glStencilMaskSeparate(GL_FRONT_AND_BACK,~0); //masking writes (bit mask)
+\end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Stencil test}
+\begin{frame}[fragile]\frametitle{Stencil test}\scriptsize
 
   \includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/stencil-test.eps}
 
   \vfill
 
-  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
-    glEnable(GL_STENCIL_TEST);
-
-    glStencilFuncSeparate(face, func, ref, mask);
-  \end{minted}
+\begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
+glEnable(GL_STENCIL_TEST);
+glStencilFuncSeparate(face, func, ref, mask);
+\end{minted}
 
   \vfill
   \begin{itemize}
@@ -44,14 +45,15 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Změny stencil bufferu}
+\begin{frame}[fragile]\frametitle{Changes to stencil buffer / Změny stencil bufferu}\scriptsize
 
   \includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/stencil-test2.eps}
 
   \vfill
 
-  glStencilOpSeparate(face, sfail, zfail, zpass);
+\begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
+glStencilOpSeparate(face, sfail, zfail, zpass);
+\end{minted}
 
   \begin{itemize}
     \item GL\_KEEP, GL\_ZERO, GL\_REPLACE, GL\_INVERT
@@ -69,40 +71,49 @@
 
 
 
-\begin{frame}
-  \frametitle{Shadow Volumes}
-  \begin{itemize}
-    \item Shadow volume je metoda pro tvorbu přesných tvrdých stínů.
-    \item Vyžaduje 3 kreslící průchody.
-    \item První průchod - vykreslení scény pouze s ambientním světlem.
-    \item Druhý průchod - vykreslení stínové geometrie a vytvoření stencilové masky.
-    \item Třetí průchod - vykreslení scény s difuzním a spekulárním světlem s využitím stencilové masky.
-    \item Existují dvě verze: zpass a zfail.
-  \end{itemize}
+\begin{frame}\frametitle{Shadow Volumes}\scriptsize
+\begin{itemize}
+  \item Shadow volume is an algorithm for creation of precise hard shadows.
+  \item It requires 3 render passes.
+  \item 1. pass -- rendering of the scene with ambient illumination.
+  \item 2. pass -- render of shadow volume geometry into stencil buffer.
+  \item 3. pass -- rendering of the scene with diffuse and specular illumination using stencil buffer.
+  \item Two variants -- zpass, zfail.
+\end{itemize}
+
+\begin{itemize}
+  \item Shadow volume je metoda pro tvorbu přesných tvrdých stínů.
+  \item Vyžaduje 3 kreslící průchody.
+  \item První průchod - vykreslení scény pouze s ambientním světlem.
+  \item Druhý průchod - vykreslení stínové geometrie a vytvoření stencilové masky.
+  \item Třetí průchod - vykreslení scény s difuzním a spekulárním světlem s využitím stencilové masky.
+  \item Existují dvě verze: zpass a zfail.
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Shadow Volumes algoritmus}
-  \begin{enumerate}
-    \item 1. kreslící průchod - ambietní světlo
-      \begin{enumerate}
-        \item Vykresli scénu s ambietním osvětlením.
-      \end{enumerate}
-    \item 2. kreslící průchod - tvorba stencilové masky
-      \begin{enumerate}
-        \item Vypni kreslení barvy a modifikaci depth bufferu.
-        \item Nastav stencilovou operaci na incrementaci u přivrácených trojúhelníku a dekrementaci při odvrácených trojúhelníků.
-        \item Povol zápis do stencil bufferu.
-        \item Vykresli stínovou geometrii - vytvoří se stencilová maska.
-        \item Vypni zápis do stencilového bufferu.
-        \item Povol kreslení barvy a modifikaci depth bufferu.
+\begin{frame}\frametitle{Shadow Volumes algoritmus}\scriptsize
+  \begin{enumerate}\scriptsize
+    \item 1. pass -- scene+ambient light $\rightarrow$ color+depth buffer
+      \begin{enumerate}\scriptsize
+        \item Draw the scene with ambient illumination. / Vykresli scénu s ambietním osvětlením.
       \end{enumerate}
 
-    \item 3. kreslící průchod - difuzní, spekulární svetlo
-      \begin{enumerate}
-        \item Zapni stencil test -  při stencilové hodnotě 0 test projde.
-        \item Vykresli scénu s difuzním a spekuláním osvětlením.
-        \item Vypni stencil test.
+    \item 2. pass -- shadow volume geometry $\rightarrow$ stencil buffer
+      \begin{enumerate}\scriptsize
+        \item Disable writes to color and depth. / Vypni kreslení barvy a modifikaci depth bufferu.
+        \item Set stencil operation to increment on front-facing triangles and to decrement on back-facing triangles. / Nastav stencilovou operaci na incrementaci u přivrácených trojúhelníku a dekrementaci při odvrácených trojúhelníků.
+        \item Enable writes to stencil buffer. / Povol zápis do stencil bufferu.
+        \item Draw shadow volume geometry into stencil buffer. / Vykresli stínovou geometrii - vytvoří se stencilová maska.
+        \item Disable writes into stencil buffer. / Vypni zápis do stencilového bufferu.
+        \item Enable writes to color and depth buffer. / Povol kreslení barvy a modifikaci depth bufferu.
+      \end{enumerate}
+
+    \item 3. pass -- scene+diffuse+specular $\rightarrow$ color buffer
+      \begin{enumerate}\scriptsize
+        \item Enable depth test (pass if stencil value is 0). / Zapni stencil test -- při stencilové hodnotě 0 test projde.
+        \item Enable additive bleding. / Povol aditivní blending.
+        \item Draw the scene with diffuse and specular illumination. / Vykresli scénu s difuzním a spekuláním osvětlením.
+        \item Disable stencil test. / Vypni stencil test.
       \end{enumerate}
   \end{enumerate}
 \end{frame}
@@ -120,46 +131,43 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shadow volumes - tvorba geometrie}
+\begin{frame}[fragile]\frametitle{Shadow volumes - geometry}\tiny
   \begin{columns}[T]
     \begin{column}{.44\textwidth}
-      {\tiny
-        \begin{minted}[frame=lines]{glsl}
-          #version 330
-          layout(triangles)in;
-          layout(triangle_strip,max_vertices=10)out;
-          uniform mat4 MVP,M;//matice
-          uniform vec4 LightPosition;//pozice svetla
-          void main(){
-            vec4 LP=M*LightPosition;
-            vec4 p[6];
-            p[0]=gl_in[0].gl_Position;//body trojuhelniku
-            p[1]=gl_in[1].gl_Position;
-            p[2]=gl_in[2].gl_Position;
-            p[3]=vec4(gl_in[0].gl_Position.xyz*LP.w-LP.xyz,0);//v nekonecnu
-            p[4]=vec4(gl_in[1].gl_Position.xyz*LP.w-LP.xyz,0);
-            p[5]=vec4(gl_in[2].gl_Position.xyz*LP.w-LP.xyz,0);
-            vec3 N=normalize(cross((p[1]-p[0]).xyz,(p[2]-p[0]).xyz));
-            float Distance=dot(N,LP.xyz)-dot(N,p[0].xyz);
-            if(Distance<=0){//otocime volume vnitrkem ven
-              vec4 c=p[0];p[0]=p[1];p[1]=c;
-              c=p[3];p[3]=p[4];p[4]=c;
-            }
-            gl_Position=MVP*p[0];EmitVertex();
-            gl_Position=MVP*p[1];EmitVertex();
-            gl_Position=MVP*p[3];EmitVertex();
-            gl_Position=MVP*p[4];EmitVertex();
-            gl_Position=MVP*p[5];EmitVertex();
-            gl_Position=MVP*p[1];EmitVertex();
-            gl_Position=MVP*p[2];EmitVertex();
-            gl_Position=MVP*p[0];EmitVertex();
-            gl_Position=MVP*p[5];EmitVertex();
-            gl_Position=MVP*p[3];EmitVertex();
-            EndPrimitive();
-          }
-        \end{minted}
-      }
+\begin{minted}[bgcolor=bg]{packages/graphics.py:GLShaderLexer -x}
+#version 330
+layout(triangles)in;
+layout(triangle_strip,max_vertices=10)out;
+uniform mat4 MVP,M;//matice
+uniform vec4 LightPosition;//pozice svetla
+void main(){
+  vec4 LP=M*LightPosition;
+  vec4 p[6];
+  p[0]=gl_in[0].gl_Position;//body trojuhelniku
+  p[1]=gl_in[1].gl_Position;
+  p[2]=gl_in[2].gl_Position;
+  p[3]=vec4(gl_in[0].gl_Position.xyz*LP.w-LP.xyz,0);//v nekonecnu
+  p[4]=vec4(gl_in[1].gl_Position.xyz*LP.w-LP.xyz,0);
+  p[5]=vec4(gl_in[2].gl_Position.xyz*LP.w-LP.xyz,0);
+  vec3 N=normalize(cross((p[1]-p[0]).xyz,(p[2]-p[0]).xyz));
+  float Distance=dot(N,LP.xyz)-dot(N,p[0].xyz);
+  if(Distance<=0){//otocime volume vnitrkem ven
+    vec4 c=p[0];p[0]=p[1];p[1]=c;
+    c=p[3];p[3]=p[4];p[4]=c;
+  }
+  gl_Position=MVP*p[0];EmitVertex();
+  gl_Position=MVP*p[1];EmitVertex();
+  gl_Position=MVP*p[3];EmitVertex();
+  gl_Position=MVP*p[4];EmitVertex();
+  gl_Position=MVP*p[5];EmitVertex();
+  gl_Position=MVP*p[1];EmitVertex();
+  gl_Position=MVP*p[2];EmitVertex();
+  gl_Position=MVP*p[0];EmitVertex();
+  gl_Position=MVP*p[5];EmitVertex();
+  gl_Position=MVP*p[3];EmitVertex();
+  EndPrimitive();
+}
+\end{minted}
     \end{column}
     \begin{column}{.48\textwidth}
       \begin{figure}[h]
@@ -170,15 +178,13 @@
 
 \end{frame}
 
-\begin{frame}
-  \frametitle{Shadow Volumes ZPass}
+\begin{frame}\frametitle{Shadow Volumes ZPass}
   \begin{figure}[h]
     \includegraphics[width=11.5cm,keepaspectratio]{pics/shadows/shadowVolumes/ZPass}
   \end{figure}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shadow Volumes - 1. průchod}
+\begin{frame}[fragile]\frametitle{Shadow Volumes - 1. pass}
 
   \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate phong program
@@ -199,8 +205,7 @@ glMultiDrawElementsIndirect(...);
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shadow Volumes - 2. průchod}
+\begin{frame}[fragile]\frametitle{Shadow Volumes - 2. pass}
 
   \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate shadow volume geometry program
@@ -223,10 +228,9 @@ glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{Shadow Volumes - 3. pass - diffuse/specular}
-  \scriptsize
+\begin{frame}[fragile]\frametitle{Shadow Volumes - 3. pass - diffuse/specular}\scriptsize
 
-  \begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
+\begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate phong program
 glUseProgram(phongProgram);
 
@@ -249,97 +253,97 @@ glDisable(GL_STENCIL_TEST);
 \end{frame}
 
 
-\begin{frame}
-    \frametitle{Víc světel}
-    $N$ světel znamená $2^N$ kombinací zastíněností :( Co s tím?
-    \pause\vfill
-    \begin{equation*}
-        \begin{array}{lcll}
-            L &=& k_e + \sum\limits_{i=1}^n k_a \cdot L_{a(i)}   & + k_d \cdot L_{d(i)} \cdot (\vec L_i \cdot \vec N) + k_s \cdot L_{s(i)} \cdot (\vec V \cdot \vec{R_i})^n \\
-            L_0 &=& k_e + \sum\limits_{i=1}^n k_a \cdot L_{a(i)} & \\
-            L_i &=& L_{i-1}                                      & + k_d \cdot L_{d(i)} \cdot (\vec L_i \cdot \vec N) + k_s \cdot L_{s(i)} \cdot (\vec V \cdot \vec{R_i})^n
-        \end{array}
-    \end{equation*}
-    \pause\vfill
-    \begin{itemize}
-        \item Vykreslit scénu s ambient+emission
-        \item Pro každé světlo
-        \begin{itemize}
-            \item Připravit stencil buffer
-            \item Přiblendovat diffuse+specular
-            \item (glDepthFunc(GL\_LEQUAL), glBlendFunc(GL\_ONE, GL\_ONE))
-        \end{itemize}
-    \end{itemize}
+\begin{frame}\frametitle{Multiple lights / Víc světel}
+$N$ lights means $2^N$ combinations of shadowing :( What to do with it?
+$N$ světel znamená $2^N$ kombinací zastíněností :( Co s tím?
+\pause\vfill
+\begin{equation*}
+    \begin{array}{lcll}
+        L &=& k_e + \sum\limits_{i=1}^n k_a \cdot L_{a(i)}   & + k_d \cdot L_{d(i)} \cdot (\vec L_i \cdot \vec N) + k_s \cdot L_{s(i)} \cdot (\vec V \cdot \vec{R_i})^n \\
+        L_0 &=& k_e + \sum\limits_{i=1}^n k_a \cdot L_{a(i)} & \\
+        L_i &=& L_{i-1}                                      & + k_d \cdot L_{d(i)} \cdot (\vec L_i \cdot \vec N) + k_s \cdot L_{s(i)} \cdot (\vec V \cdot \vec{R_i})^n
+    \end{array}
+\end{equation*}
+\pause\vfill
+\begin{itemize}
+  \item Draw the scene with ambient+emission / Vykreslit scénu s ambient+emission
+  \item For every light source / Pro každé světlo
+  \begin{itemize}
+    \item Prepare stencil buffer / Připravit stencil buffer
+    \item Blend together diffuse+specular / Přiblendovat diffuse+specular
+    \item (glDepthFunc(GL\_LEQUAL), glBlendFunc(GL\_ONE, GL\_ONE))
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Výhody a nevýhody}
-    
-    $+$
-    \begin{itemize}
-        \item Dynamické scény
-        \item Problematické scény
-        \item Sedí na pixel přesně
-    \end{itemize}
+\begin{frame}\frametitle{Properties / Výhody a nevýhody}
+$+$
+\begin{itemize}
+  \item Dynamic scenes / Dynamické scény
+  \item Problematic scens / Problematické scény
+  \item Per-sample precise / Sedí na pixel přesně
+\end{itemize}
 
-    \vfill
-    $-$
-    \begin{itemize}
-        \item Pomalé
-        \item Závislé na fillrate
-        \item Konstrukce stínových těles
-        \item Jen ostré stíny
-    \end{itemize}
+\vfill
+$-$
+\begin{itemize}
+    \item Slow / Pomalé
+    \item Fillrate dependent / Závislé na fillrate
+    \item Needs to create shadow geometry / Konstrukce stínových těles
+    \item Only hard shadows / Jen ostré stíny
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Problém...}
-    \includegraphics[width=3in]{pics/shadows/shadowVolumes/ZPass-fail.eps}
-    \pause\vfill
-    Stačí vlézt dovnitř stínového tělesa.
+\begin{frame}\frametitle{Problem / Problém...}
+\includegraphics[width=3in]{pics/shadows/shadowVolumes/ZPass-fail.eps}
+\pause\vfill
+If the camera enters shadow volume.
+Stačí vlézt dovnitř stínového tělesa.
 \end{frame}
 
-\begin{frame}
-    \frametitle{Z\_PASS vs. Z\_FAIL}
-    Pixel je ve stínu když paprsek vletí {\color{red}dovnitř} a nevyletí {\color{blue}ven}.
-    \begin{columns}[c]
-    \column{.5\textwidth}
-        \includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/ShadowVolume.eps}
-    \column{.5\textwidth}
-        Z\_PASS : \\
-        Počítám viditelné pixely \\
-        {\color{red} +1}, {\color{blue} -1}
-        \vfill
-        Z\_FAIL : \\
-        Počítám neviditelné pixely
-        {\color{red} -1}, {\color{blue} +1}
-    \end{columns}
-    \pause\vfill
-    glStencilOpSeparate(GL\_FRONT, GL\_KEEP, GL\_DECR\_WRAP, GL\_KEEP);\\
-    glStencilOpSeparate(GL\_BACK, GL\_KEEP, GL\_INCR\_WRAP, GL\_KEEP);    
+\begin{frame}\frametitle{Z\_PASS vs. Z\_FAIL}
+Pixel is shadowed, if the ray {\color{red}enters} a shadow volume and does not {\color{blue}get out}.\\
+Pixel je ve stínu když paprsek vletí {\color{red}dovnitř} a nevyletí {\color{blue}ven}.
+\begin{columns}[c]
+\column{.5\textwidth}
+  \includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/ShadowVolume.eps}
+\column{.5\textwidth}
+  Z\_PASS : \\
+  Computes visible shadow volume samples / Počítám viditelné vzorky stínových těles \\
+  {\color{red} +1}, {\color{blue} -1}
+  \vfill
+  Z\_FAIL : \\
+  Computes invisible shadow volume samples / Počítám neviditelné vzorky stínových těles \\
+  {\color{red} -1}, {\color{blue} +1}
+\end{columns}
+\pause\vfill
+glStencilOpSeparate(GL\_FRONT, GL\_KEEP, GL\_DECR\_WRAP, GL\_KEEP);\\
+glStencilOpSeparate(GL\_BACK, GL\_KEEP, GL\_INCR\_WRAP, GL\_KEEP);    
 \end{frame}
 
-\begin{frame}
-    \frametitle{Další zádrhel}
-    \includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/svol-cap.eps}
-    \begin{itemize}
-        \item Stínové těleso musí být uzavřené.
-        \item A jeho stěny musí být "viditelné".
-        \item Problém je far-plane.
-    \end{itemize}
+\begin{frame}\frametitle{Another problem / Další zádrhel}
+\includegraphics[width=\textwidth]{pics/shadows/shadowVolumes/svol-cap.eps}
+\begin{itemize}
+  \item Shadow volume has to be watertight.
+  \item All sides has to be renderable.
+  \item Problem with far-plane.
+\end{itemize}
+\begin{itemize}
+  \item Stínové těleso musí být uzavřené.
+  \item A jeho stěny musí být "viditelné".
+  \item Problém je far-plane.
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Shadow Volumes ZFail}
+\begin{frame}\frametitle{Shadow Volumes ZFail}
   \begin{figure}[h]
     \includegraphics[width=11.5cm,keepaspectratio]{pics/shadows/shadowVolumes/ZFail}
   \end{figure}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shadow Volumes - 2. průchod modifikace}
+\begin{frame}[fragile]\frametitle{Shadow Volumes - 2. pass is modified}\scriptsize
 
-  \begin{minted}[frame=lines]{c++}
+\begin{minted}[bgcolor=bg]{packages/c_cpp.py:CppLexer -x}
 //activate shadow volume geometry program
 glUseProgram(shadowVolumeProgram);
 glProgramUniformMatrix4fv(shadowVolumeProgram,mvpUniform,
@@ -364,43 +368,42 @@ glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 \end{frame}
 
 
-\begin{frame}
-    \frametitle{Nekonečná projekce}
-    \begin{align*}
-        \lim_{\mathrm{far} \to +\infty}\begin{pmatrix}
-            \frac{2\mathrm{near}}{\mathrm{right}-\mathrm{left}}&0&\frac{\mathrm{right}+\mathrm{left}}{\mathrm{right}-\mathrm{left}}&0\\
-            0&\frac{2\mathrm{near}}{\mathrm{top}-\mathrm{bottom}}&\frac{\mathrm{top}+\mathrm{bottom}}{\mathrm{top}-\mathrm{bottom}}&0\\
-            0&0&-\frac{\mathrm{far}+\mathrm{near}}{\mathrm{far}-\mathrm{near}}&-\frac{2\mathrm{near}\mathrm{far}}{\mathrm{far}-\mathrm{near}}\\
-            0&0&-1&0
-        \end{pmatrix} \\
-        = \begin{pmatrix}
-            \frac{2\mathrm{near}}{\mathrm{right}-\mathrm{left}}&0&\frac{\mathrm{right}+\mathrm{left}}{\mathrm{right}-\mathrm{left}}&0\\
-            0&\frac{2\mathrm{near}}{\mathrm{top}-\mathrm{bottom}}&\frac{\mathrm{top}+\mathrm{bottom}}{\mathrm{top}-\mathrm{bottom}}&0\\
-            0&0&-1&-2\mathrm{near}\\
-            0&0&-1&0
-        \end{pmatrix}
-    \end{align*}
-    \pause\vfill
-    \begin{itemize}
-        \item[:)] Vidíme do nekonečna.
-        \item[?] Co z-test? Dělíme nekonečnou délku na konečný počet dílků.
-    \end{itemize}
+\begin{frame}\frametitle{Infinite projection / Nekonečná projekce}
+\begin{align*}
+  \lim_{\mathrm{far} \to +\infty}\begin{pmatrix}
+    \frac{2\mathrm{near}}{\mathrm{right}-\mathrm{left}}&0&\frac{\mathrm{right}+\mathrm{left}}{\mathrm{right}-\mathrm{left}}&0\\
+    0&\frac{2\mathrm{near}}{\mathrm{top}-\mathrm{bottom}}&\frac{\mathrm{top}+\mathrm{bottom}}{\mathrm{top}-\mathrm{bottom}}&0\\
+    0&0&-\frac{\mathrm{far}+\mathrm{near}}{\mathrm{far}-\mathrm{near}}&-\frac{2\mathrm{near}\mathrm{far}}{\mathrm{far}-\mathrm{near}}\\
+    0&0&-1&0
+  \end{pmatrix} \\
+  = \begin{pmatrix}
+    \frac{2\mathrm{near}}{\mathrm{right}-\mathrm{left}}&0&\frac{\mathrm{right}+\mathrm{left}}{\mathrm{right}-\mathrm{left}}&0\\
+    0&\frac{2\mathrm{near}}{\mathrm{top}-\mathrm{bottom}}&\frac{\mathrm{top}+\mathrm{bottom}}{\mathrm{top}-\mathrm{bottom}}&0\\
+    0&0&-1&-2\mathrm{near}\\
+    0&0&-1&0
+  \end{pmatrix}
+\end{align*}
+\pause\vfill
+\begin{itemize}
+  \item[:)] It is possible to render objects in infinity. / Vidíme do nekonečna.
+  \item[?] What about z-test? We are dividing infinite lenght into finite number of splits. / Co z-test? Dělíme nekonečnou délku na konečný počet dílků.
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Z-buffer a nekonečno}
-    \begin{align*}
-        P(z) &= \frac{z - 2n}{z} = 1 - \frac{2n}{z} & \text{ Dopředu je $-z$}
-    \end{align*}
-    \pause\vfill
-    \begin{align*}
-        P(n) &= -1 & P(\infty) &=  1 \\
-        P(2n) &= 0 & P(4n) &= 1/2
-    \end{align*}
-    \includegraphics[width=.5\textwidth]{pics/shadows/shadowVolumes/plot/infdepth.eps}
-    \includegraphics[width=.5\textwidth]{pics/shadows/shadowVolumes/plot/findepth.eps}
-    \begin{itemize}
-        \item[:)] Většina hodnot z-bufferu je v "rozumné" vzdálenosti.
-    \end{itemize}
+\begin{frame}\frametitle{Z-buffer and inifinity}
+\begin{align*}
+  P(z) &= \frac{z - 2n}{z} = 1 - \frac{2n}{z} & \text{ $-z$ is forward / Dopředu je $-z$}
+\end{align*}
+\pause\vfill
+\begin{align*}
+  P(n) &= -1 & P(\infty) &=  1 \\
+  P(2n) &= 0 & P(4n) &= 1/2
+\end{align*}
+\includegraphics[width=.25\textwidth]{pics/shadows/shadowVolumes/plot/infdepth.eps}
+\includegraphics[width=.25\textwidth]{pics/shadows/shadowVolumes/plot/findepth.eps}
+\begin{itemize}
+  \item[:)] Most of the values of z-buffer are in "reasonable" distance.
+  \item[:)] Většina hodnot z-bufferu je v "rozumné" vzdálenosti.
+\end{itemize}
 \end{frame}
 
